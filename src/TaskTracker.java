@@ -22,6 +22,34 @@ public class TaskTracker {
         }
     }
 
+    public void deleteTask(int id){
+        Task task = findTaskById(id);
+        if(task != null){
+            tasks.remove(task);
+            System.out.println("Task deleted: " + task);
+        }else {
+            System.out.println("Task not found");
+        }
+    }
+    public void updateStatus(int id,String status){
+        Task task = findTaskById(id);
+        if(task != null){
+            task.setStatus(status);
+        }else{
+            System.out.println("Task not found");
+        }
+    }
+
+
+    private Task findTaskById(int id){
+        for(Task task : tasks){
+            if(task.getId() == id){
+                return task;
+            }
+        }
+        return null;
+    }
+
     public void saveTask(String filename){
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))){
             oos.writeObject(tasks);
@@ -34,7 +62,7 @@ public class TaskTracker {
     public void loadTask(String filename){
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))){
             tasks = (List<Task>) ois.readObject();
-            nextId = tasks.size() +1 ;
+            nextId = tasks.size() +1;
             System.out.println("Loaded tasks");
         }catch (IOException | ClassNotFoundException e){
             e.printStackTrace();

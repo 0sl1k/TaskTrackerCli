@@ -3,30 +3,52 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         TaskTracker taskTracker = new TaskTracker();
-        Scanner scanner = new Scanner(System.in);
-
-        while(true){
-            System.out.println("1.Add Task");
-            System.out.println("2.View task");
 
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
 
-            switch(choice){
-                case 1:
-                    System.out.println("Enter task title");
-                    String title = scanner.nextLine();
-                    System.out.println("Enter task description");
-                    String description = scanner.nextLine();
+            taskTracker.loadTask("task.dat");
+
+
+            String command = args[0];
+
+            switch(command){
+                case "add":
+                    if (args.length < 3){
+                        System.out.println("Use: task-cli add <title> <description>");
+                    }
+                    String title = args[1];
+                    String description = args[2];
                     taskTracker.addTask(title,description);
                     taskTracker.saveTask("task.dat");
                     break;
-                    case 2:
+                    case "view":
+                        if (args.length < 2){
+                            System.out.println("Use: task-cli view");
+                        }
                         taskTracker.loadTask("task.dat");
                         taskTracker.viewTask();
                         break;
+                    case "delete":
+                        if (args.length < 2){
+                            System.out.println("Use: task-cli delete <id>");
+                            return;
+                        }
+                        int deleteId = Integer.parseInt(args[1]);
+                        taskTracker.deleteTask(deleteId);
+                        taskTracker.saveTask("task.dat");
+                        break;
+                    case "updateStatus":
+                        if (args.length < 3){
+                            System.out.println("Use: task-cli updateStatus <id> <status>");
+                            return;
+                        }
+                        int id = Integer.parseInt(args[1]);
+                        String status = args[2];
+                        taskTracker.updateStatus(id, status);
+                        taskTracker.saveTask("task.dat");
+                        break;
+
             }
-        }
+
     }
 }
